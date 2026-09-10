@@ -4,7 +4,8 @@
 
 | Aspecto | Decisión | Por qué |
 |---|---|---|
-| Modelo | Frontier de gama media (Claude / GPT / Gemini, versión estándar, no la mini) | La tarea es lectura larga con razonamiento de criterio y resistencia a manipulación. Probamos con el modelo liviano: leía el README, no cruzaba contra los artefactos, y el caso tramposo le sacó 78. El criterio del curso es "el más chico que hace bien la tarea" — el más chico **no** hace bien esta tarea. |
+| Modelo **usado en las 25 correcciones documentadas** | **Claude Sonnet**, gama media, configuración por defecto, una conversación nueva y aislada por corrida |
+| Modelo requerido | Frontier de gama media (Claude / GPT / Gemini, versión estándar, no la mini). El contrato es texto plano y no está atado a un proveedor | La tarea es lectura larga con razonamiento de criterio y resistencia a manipulación. Probamos con el modelo liviano: leía el README, no cruzaba contra los artefactos, y el caso tramposo le sacó 78. El criterio del curso es "el más chico que hace bien la tarea" — el más chico **no** hace bien esta tarea. |
 | Temperatura | 0 (o la mínima disponible) | La consistencia entre corridas es un requisito del parcial, no una preferencia. |
 | Ventana de contexto | Necesita entrar el repo completo + rúbrica (~12k tokens de system prompt) | Un repo de trabajo final típico ronda los 6–10k tokens. Con 32k alcanza; con 128k sobra. |
 
