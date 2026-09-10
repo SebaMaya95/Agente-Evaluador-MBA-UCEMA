@@ -713,6 +713,20 @@ Reglas de formato:
 <script>
 (function(){
   "use strict";
+
+  /* ==========================================================================
+     LA ÚNICA LÍNEA QUE HAY QUE TOCAR
+
+     Pegá acá la URL del Worker de Cloudflare, entre las comillas. Queda así:
+       var API = "https://mesa-correccion.TU-USUARIO.workers.dev";
+
+     Con la URL puesta, cualquiera que abra esta página carga un trabajo y lo
+     corrige ahí mismo, sin cuenta de nada.
+     Vacía, la página sigue funcionando: arma el pedido para pegar en el modelo
+     que cada uno use.
+     ========================================================================== */
+  var API = "";
+
   var $ = function(s){ return document.querySelector(s); };
   var CONTRACT = document.getElementById("contract").textContent;
   var MAXCHARS = 220000;
@@ -1126,6 +1140,50 @@ Reglas de formato:
     ul.insertBefore(li, ul.firstChild);
   }
 
+  /* ---------- corrección por el backend propio ---------- */
+  function correrPorAPI(input, onText, signal){
+    return fetch(API.replace(/\/+$/,""), {
+      method: "POST",
+      headers: {"content-type":"application/json"},
+      body: JSON.stringify({prompt: input}),
+      signal: signal
+    }).then(function(res){
+      if(!res.ok){
+        return res.text().then(function(t){
+          var msg = "El corrector no pudo responder.";
+          try{ var j = JSON.parse(t); if(j && j.error && j.error.mensaje) msg = j.error.mensaje; }catch(e){}
+          var err = new Error(msg); err.code = "api"; throw err;
+        });
+      }
+      if(!res.body){ var e2 = new Error("Tu navegador no soporta respuestas en vivo."); e2.code="navegador"; throw e2; }
+      var reader = res.body.getReader(), dec = new TextDecoder(), buf = "", texto = "";
+      function leer(){
+        return reader.read().then(function(r){
+          if(r.done) return texto;
+          buf += dec.decode(r.value, {stream:true});
+          var i;
+          while((i = buf.indexOf("\n\n")) >= 0){
+            var bloque = buf.slice(0, i); buf = buf.slice(i + 2);
+            var linea = bloque.split("\n").filter(function(l){ return l.indexOf("data:") === 0; })[0];
+            if(!linea) continue;
+            var d = linea.slice(5).trim();
+            if(!d || d === "[DONE]") continue;
+            try{
+              var ev = JSON.parse(d);
+              if(ev.type === "content_block_delta" && ev.delta && typeof ev.delta.text === "string"){
+                texto += ev.delta.text; onText(texto);
+              } else if(ev.type === "error" && ev.error){
+                var e3 = new Error(ev.error.message || "El modelo cortó la respuesta."); e3.code = "api"; throw e3;
+              }
+            }catch(e){ if(e && e.code === "api") throw e; }
+          }
+          return leer();
+        });
+      }
+      return leer();
+    });
+  }
+
   /* ---------- pedido armado, para usar en cualquier modelo ---------- */
   function buildInput(repo){
     var nombre = $("#nombre").value.trim() || "(sin identificar)";
@@ -1165,27 +1223,37 @@ Reglas de formato:
   $("#run").addEventListener("click", function(){
     var repo = buildRepo();
     if(!repo){ showError("Cargá los archivos del trabajo, o pegá su contenido, antes de corregir."); return; }
-    if(!sampleFn){ showError("Esta vista no puede consultar a Claude, así que no puede correr la corrección. Podés seguir usando el contrato a mano: está en agente/system_prompt.md del repositorio."); return; }
+    if(!API && !sampleFn){ showError("Esta página todavía no tiene backend configurado. Usá el camino de abajo: armá el pedido y pegalo en el modelo que uses."); return; }
 
     var input = buildInput(repo);
     var ui = showWorking();
     $("#run").disabled = true; $("#stop").hidden = false;
     ctl = new AbortController();
 
-    sampleFn(input, {
-      modelTier: "complex",
-      cache: false,
-      signal: ctl.signal,
-      onText: function(o){ ui.label.textContent = "Escribiendo la corrección…"; ui.pre.textContent = o.text; ui.pre.scrollTop = ui.pre.scrollHeight; }
-    }).then(function(res){
-      var r = parse(res.text);
+    function pintar(t){ ui.label.textContent = "Escribiendo la corrección…"; ui.pre.textContent = t; ui.pre.scrollTop = ui.pre.scrollHeight; }
+
+    var trabajo = API
+      ? correrPorAPI(input, pintar, ctl.signal)
+      : sampleFn(input, {modelTier:"complex", cache:false, signal:ctl.signal,
+          onText: function(o){ pintar(o.text); }}).then(function(res){ return res.text; });
+
+    trabajo.then(function(texto){
+      var r = parse(texto);
+      if(!r.rows.length && !r.final && !r.trabajo){
+        showError("El corrector respondió, pero no en el formato esperado. La salida cruda está debajo.");
+        var d0 = el("details","rawbox"); d0.appendChild(el("summary","","Ver la respuesta"));
+        var pb0 = el("div","pb"); pb0.appendChild(el("pre","raw", texto)); d0.appendChild(pb0);
+        $("#out").appendChild(d0);
+        return;
+      }
       render(r); pushHist(r);
     }).catch(function(e){
-      var code = (e && e.code) || "";
+      var code = (e && e.code) || (e && e.name === "AbortError" ? "cancelled" : "");
       var msg;
       if(code === "cancelled") { msg = "Corrección detenida. No se guardó ninguna nota."; }
-      else if(code === "not_granted") { msg = "Para correr la corrección hace falta permitir que esta página consulte a Claude. Volvé a intentarlo y aceptá el pedido, o usá el contrato a mano desde agente/system_prompt.md."; }
+      else if(code === "not_granted") { msg = "Para correr la corrección hace falta dar permiso. Volvé a intentarlo, o usá el camino de abajo con el modelo que prefieras."; }
       else if(code === "rate_limited") { msg = "Demasiadas correcciones seguidas. Esperá un momento y volvé a intentar."; }
+      else if(code === "api") { msg = e.message + " Mientras tanto podés usar el camino de abajo: armá el pedido y pegalo en el modelo que uses."; }
       else { msg = "La corrección no se completó" + (e && e.message ? ": " + e.message : ".") + " La salida parcial, si la hubo, está debajo."; }
       showError(msg);
       if(e && e.text){
@@ -1222,8 +1290,13 @@ Reglas de formato:
     $("#copyPrompt").style.width = "100%";
   }
   var hint = $("#capHint");
-  hint.textContent = "Conectando con Claude…";
-  if(window.claude && window.claude.use){
+  if(API){
+    hint.textContent = "La corrección corre en el servidor de esta herramienta. No necesitás cuenta de nada.";
+    var alt0 = document.querySelector(".alt");
+    alt0.querySelector("h3").textContent = "¿Preferís usar otro modelo?";
+    alt0.querySelector("p").textContent = "La herramienta también te arma el pedido completo —el contrato de seis capas más el trabajo cargado— para que lo corras donde quieras y pegues la respuesta acá.";
+  } else if(window.claude && window.claude.use){
+    hint.textContent = "Conectando…";
     window.claude.use("sample").then(function(s){
       sampleFn = s;
       hint.textContent = s
