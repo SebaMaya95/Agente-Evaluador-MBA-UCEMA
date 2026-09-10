@@ -653,11 +653,11 @@ Reglas de formato:
 var CONTRATO = document.getElementById("contrato").textContent;
 
 /* ==========================================================================
-   LA ÚNICA LÍNEA QUE HAY QUE TOCAR
-   Pegá la URL del Worker de Cloudflare entre las comillas:
-     var API = "https://mesa-correccion.sebamaya95.workers.dev";
+   BACKEND
+   URL del Worker de Cloudflare que guarda la clave de la API y habla con
+   Anthropic. Si algún día se muda el Worker, se cambia acá y nada más.
    ========================================================================== */
-var API = "";
+var API = "https://mesa-correccion.sebamaya95.workers.dev";
 
 var $ = function(s){ return document.querySelector(s); };
 var HKEY = "consola.correcciones.v1";
