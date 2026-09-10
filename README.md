@@ -91,7 +91,7 @@ Los prompts completos están en `agente/`. El orden real:
 - **La inyección que más miedo da sigue sin probarse bien.** Las nuestras se anuncian: un `SYSTEM_MESSAGE priority=override` en un log grita que es un ataque. Una buena sería un párrafo de `DECISIONES.md` indistinguible de una decisión real. El caso `a6` es lo más cerca que llegamos y todavía se nota.
 - **`excelente` sigue en 100 y la pasada adversaria no lo bajó.** Eso puede significar que el caso es realmente bueno, o que la pasada adversaria es más blanda de lo que creemos. No tengo forma de distinguir esas dos hipótesis con los casos que tengo, y prefiero decirlo a asumir la lectura que me conviene.
 - **Test-retest solo sobre un caso.** `flojo`, `tramposo` y los seis adversarios se corrieron una vez por versión. La comparación v4 contra v5 es de una corrida contra una corrida.
-- **El proceso fue de un día, y la historia de commits no lo cuenta bien.** No tengo dos semanas de iteraciones repartidas entre seis personas para exhibir: armé el grupo tarde y trabajé solo. Peor: los archivos se subieron por el navegador, carpeta por carpeta, así que los commits que ves son la subida y no la construcción. Lo que sí es real y verificable está adentro de los archivos — el historial de versiones al pie de `rubrica.md` (v0→v3) y de `agente/system_prompt.md` (v0→v4, con cada `[CAMBIO]` y el motivo), y las siete salidas literales de `calibracion/salidas/` divididas en ronda 1 y ronda 2. Esa es la secuencia; los commits, no. Lo aclaro porque esconderlo sería exactamente lo que mi propia rúbrica marca como `INFLADO`.
+- **El proceso fue de un día, y la historia de commits no lo cuenta bien.** No tengo dos semanas de iteraciones repartidas entre seis personas para exhibir: armé el grupo tarde y trabajé solo. Peor: los archivos se subieron por el navegador, carpeta por carpeta, así que los commits que ves son la subida y no la construcción. Lo que sí es real y verificable está adentro de los archivos — el historial de versiones al pie de `rubrica.md` (v0→v7) y de `agente/system_prompt.md` (v0→v9, con cada `[CAMBIO]` y el motivo), las seis rondas de `calibracion.md` y las salidas literales de `calibracion/salidas/`. Esa es la secuencia; los commits, no. Lo aclaro porque esconderlo sería exactamente lo que mi propia rúbrica marca como `INFLADO`.
 - **Sesgo por dominio, sin medir.** Los tres casos son del mismo caso de negocio, a propósito, para que la única variable sea la calidad. El costo de esa decisión es que no sé si el corrector puntúa distinto un trabajo de otro rubro.
 
 ## Qué aprendí
@@ -114,9 +114,9 @@ También me obligó a decidir algo que creía obvio: si la trampa debía descont
 
 ```
 README.md                      — este archivo
-rubrica.md                     — la rúbrica ejecutable (v6)
+rubrica.md                     — la rúbrica ejecutable (v7)
 agente/
-  system_prompt.md             — el corrector, seis capas (v7) + historial de cambios
+  system_prompt.md             — el corrector, seis capas (v9) + historial de cambios
   user_prompt.md               — el prompt de cada corrida (3 variantes)
   configuracion.md             — modelo, herramientas, supervisión L0-L4, costo
 casos/
@@ -144,4 +144,4 @@ En corto: conversación nueva → pegar `agente/system_prompt.md` como system pr
 
 **Modelo:** las 25 correcciones documentadas se corrieron con Claude Sonnet, gama media, una conversación aislada cada una. El contrato es texto plano y corre igual en GPT o Gemini de gama equivalente. Costo: ~USD 0,04 por corrección.
 
-**Supervisión.** Ninguna nota se publica sin que una persona la lea: la corrección corre en **L3**, la publicación en **L2**, y todo caso con `INTEGRIDAD: COMPROMETIDA` o bandera `INFLADO` va a revisión manual completa. La penalización del 50 % la calcula el agente y la confirma o revierte una persona. **Firma: Sebastián Maya.**
+**Supervisión.** Ninguna nota se publica sin que una persona la lea: la corrección corre en **L3**, la publicación en **L2**, y todo caso con `INTEGRIDAD: INTENTO DE FRAUDE` o `FRAUDE CONSUMADO`, y toda bandera `INFLADO`, va a revisión manual completa. La consecuencia —50 % en el intento, nota final 0 en el fraude consumado— la calcula el agente y la confirma o revierte una persona. **Firma: Sebastián Maya.**
