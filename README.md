@@ -6,7 +6,13 @@
 
 ## Cómo entrar al corrector
 
-**La herramienta:** [Mesa de Corrección](https://claude.ai/code/artifact/7b8f9066-7aa8-4509-b8fa-49f4a35d233a) — se arrastra la carpeta del trabajo final y sale la corrección completa: rúbrica a la vista, puntaje por dimensión con su ancla, evidencia citada, veredicto de integridad y nota. Lee **PDF, Word (.docx)**, markdown, texto, CSV, JSON y código. Requiere una cuenta de Claude; la primera corrección pide permiso.
+### ▶ [Abrir la Mesa de Corrección](https://sebamaya95.github.io/Agente-Evaluador-MBA-UCEMA/)
+
+**Abierta para cualquiera, sin cuenta ni instalación.** Se arrastra el trabajo final —**PDF, Word (.docx)**, markdown, texto, CSV, JSON o código—, la página arma el pedido completo con el contrato de seis capas, se pega en el modelo que uses (cualquiera sirve), se pega la respuesta de vuelta y sale la corrección entera: la rúbrica a la vista, el puntaje de cada dimensión con su ancla en la escala N0–N4, la evidencia citada de cada puntaje, el veredicto de integridad con sus hallazgos, las banderas y las tres cifras de la nota.
+
+Los archivos no salen de tu navegador: el texto del PDF y del Word se extrae ahí mismo, sin subir nada a ningún servidor.
+
+**Atajo si usás Claude:** [la misma herramienta como artefacto](https://claude.ai/code/artifact/7b8f9066-7aa8-4509-b8fa-49f4a35d233a) corrige de un click, sin copiar ni pegar. Requiere cuenta de Claude, así que la versión de arriba es la que sirve para todos.
 
 **El contrato, para usarlo a mano en cualquier modelo:** [`agente/system_prompt.md`](agente/system_prompt.md). Se pega como system prompt, se le pasa el trabajo con [`agente/user_prompt.md`](agente/user_prompt.md), y devuelve el mismo formato.
 

@@ -8,13 +8,24 @@ El contrato es lo primario y la página es una comodidad encima. Eso es delibera
 
 ## Opción 1 — la Mesa de Corrección
 
-**https://claude.ai/code/artifact/7b8f9066-7aa8-4509-b8fa-49f4a35d233a**
+**https://sebamaya95.github.io/Agente-Evaluador-MBA-UCEMA/**
+
+Abierta para cualquiera: no hay que iniciar sesión en nada ni instalar nada.
 
 Se arrastra la carpeta del trabajo final a la página y sale la corrección: la rúbrica completa a la vista, el puntaje de cada dimensión con su ancla en la escala N0–N4, la evidencia citada de cada puntaje, el veredicto de integridad con sus hallazgos, las banderas, y las tres cifras de la nota. Se puede copiar la corrección o guardarla como archivo.
 
 Lee `.md`, `.txt`, `.csv`, `.json` y archivos de código. No lee `.pdf` ni `.docx`, y **no puede abrir una URL de GitHub**: hay que bajar el repositorio (botón verde *Code → Download ZIP*, descomprimir) y arrastrar la carpeta.
 
-La corrección corre con la cuenta de Claude de quien abre la página, y la primera vez pide permiso. Cada corrección cuesta unos USD 0,04 de su propio uso.
+**Cómo corrige, sin pedirte cuenta de nada.** La página no consulta a ningún modelo por su cuenta. Hace las dos partes difíciles —armar el pedido y leer la respuesta— y deja el paso del modelo en tus manos:
+
+1. Cargás el trabajo.
+2. Apretás **Copiar el pedido completo**: te lleva al portapapeles el contrato de seis capas más el trabajo, ya formateado con los delimitadores que separan la instrucción del dato.
+3. Lo pegás en el modelo que uses. Cualquiera de gama media sirve — Claude, ChatGPT, Gemini.
+4. Pegás la respuesta de vuelta en la página y apretás **Ver la corrección**.
+
+Sale la corrección completa, igual que si la hubiera corrido la página.
+
+**Atajo para quien use Claude.** La misma herramienta existe como artefacto de Claude —https://claude.ai/code/artifact/7b8f9066-7aa8-4509-b8fa-49f4a35d233a— y ahí corrige de un click, sin copiar ni pegar. Cada corrección cuesta unos USD 0,04 del uso de quien la abre. Requiere cuenta de Claude, por eso la versión abierta es la principal.
 
 ---
 
