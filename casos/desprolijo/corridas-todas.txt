@@ -1,0 +1,38 @@
+=== CORRIDA 1 — 26/08/2026 09:14 — system v1, user v1 — modelo liviano, temp 0 ===
+ENTRADA reclamos_2026-08-25.csv (12 filas, se pegan 3):
+id,fecha,cliente,cuerpo
+R-01,2026-08-25,CLIENTE_3,"El pedido 8841 de urea tenia que estar el martes para aplicar antes de la lluvia y no llego. Ya sembramos."
+R-02,2026-08-25,CLIENTE_7,"POR FAVOR cambien de una vez el domicilio de facturacion!!! Es la tercera vez que lo pido."
+R-03,2026-08-26,CLIENTE_11,"Llegaron 4 bolsas de semilla rotas del pedido 8903."
+SALIDA (literal, tal como salio):
+Claro! Aca va la clasificacion de los reclamos de la semana del 25 de agosto:
+```json
+[{"id":"R-01","categoria":"entrega","urgencia":"alta","area_sugerida":"Logistica","justificacion":"Necesita la urea con urgencia para aplicar antes de la lluvia."},
+ {"id":"R-02","categoria":"facturacion","urgencia":"alta","area_sugerida":"Facturacion","justificacion":"El cliente esta muy molesto, es la tercera vez que lo pide."},
+ {"id":"R-03","categoria":"producto","urgencia":"media","area_sugerida":"Tecnica","justificacion":"Bolsas de semilla danadas en el pedido 8903."}]
+```
+Espero que te sirva. Si queres puedo armarte tambien un resumen por area.
+FALLO: texto antes y despues del JSON; R-02 con urgencia alta por el tono.
+
+=== CORRIDA 2 — 02/09/2026 08:40 — system v2, user v2 — modelo liviano, temp 0 ===
+ENTRADA reclamos_2026-09-01.csv (15 filas, se pegan 3):
+R-04,"Del pedido 9012 faltaron 2 bidones de glifosato. El remito dice 10 y llegaron 8."
+R-07,"Sigo esperando el cambio de domicilio de facturacion. Van 3 semanas."
+R-09,"Aplicamos el herbicida y se nos quemo el lote de soja. 40 hectareas. Vamos a pedir asesoramiento legal."
+SALIDA (literal):
+[{"id":"R-04","categoria":"entrega","urgencia":"media","area_sugerida":"Logistica","justificacion":"Faltante de 2 bidones contra remito del pedido 9012."},
+ {"id":"R-07","categoria":"facturacion","urgencia":"alta","area_sugerida":"Facturacion","justificacion":"Cambio de domicilio pendiente hace 3 semanas con reiteracion."},
+ {"id":"R-09","categoria":"producto","urgencia":"alta","area_sugerida":"Legales","justificacion":"Dano a 40 ha de soja atribuido al herbicida, con mencion de asesoramiento legal."}]
+REVISION HUMANA: 14/15 coinciden. Desacuerdo en R-07 (yo hubiera puesto baja).
+
+=== CORRIDA 3 — 09/09/2026 08:55 — system v2, user v2 — modelo liviano, temp 0 ===
+ENTRADA reclamos_2026-09-08.csv (13 filas, se pegan 3):
+R-12,"Hace 10 dias pedi el estado del pedido 9107 y nadie me contesto."
+R-14,"Dos cosas: el pedido 9120 llego con 3 dias de atraso y encima la factura vino con el CUIT viejo. Necesito la factura corregida para cerrar el mes."
+R-16,"El bidon vino sin etiqueta de seguridad. No lo vamos a usar asi."
+SALIDA (literal, las 13 filas; se pegan 3):
+[{"id":"R-12","categoria":"atencion","urgencia":"media","area_sugerida":"Comercial","justificacion":"Consulta de estado del pedido 9107 sin respuesta hace 10 dias."},
+ {"id":"R-14","categoria":"facturacion","urgencia":"media","area_sugerida":"Facturacion","justificacion":"El reclamo trae dos problemas: atraso de entrega y CUIT erroneo. Se clasifica por facturacion, que tiene cierre de mes."},
+ {"id":"R-16","categoria":"producto","urgencia":"alta","area_sugerida":"Tecnica","justificacion":"Bidon de agroquimico sin etiqueta de seguridad."}]
+REVISION HUMANA: 13/13 categorias correctas. R-14 muestra la limitacion de reclamos mezclados.
+TEST-RETEST: misma entrada dos veces, 13/13 categorias iguales, 1 urgencia distinta (R-19).
