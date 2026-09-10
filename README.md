@@ -6,7 +6,7 @@
 
 ## Cómo entrar al corrector
 
-**La herramienta:** [Mesa de Corrección](https://claude.ai/code/artifact/7b8f9066-7aa8-4509-b8fa-49f4a35d233a) — se arrastra la carpeta del trabajo final y sale la corrección completa: rúbrica a la vista, puntaje por dimensión con su ancla, evidencia citada, veredicto de integridad y nota. Requiere una cuenta de Claude; la primera corrección pide permiso.
+**La herramienta:** [Mesa de Corrección](https://claude.ai/code/artifact/7b8f9066-7aa8-4509-b8fa-49f4a35d233a) — se arrastra la carpeta del trabajo final y sale la corrección completa: rúbrica a la vista, puntaje por dimensión con su ancla, evidencia citada, veredicto de integridad y nota. Lee **PDF, Word (.docx)**, markdown, texto, CSV, JSON y código. Requiere una cuenta de Claude; la primera corrección pide permiso.
 
 **El contrato, para usarlo a mano en cualquier modelo:** [`agente/system_prompt.md`](agente/system_prompt.md). Se pega como system prompt, se le pasa el trabajo con [`agente/user_prompt.md`](agente/user_prompt.md), y devuelve el mismo formato.
 
@@ -109,9 +109,9 @@ También me obligó a decidir algo que creía obvio: si la trampa debía descont
 
 ```
 README.md                      — este archivo
-rubrica.md                     — la rúbrica ejecutable (v3)
+rubrica.md                     — la rúbrica ejecutable (v6)
 agente/
-  system_prompt.md             — el corrector, seis capas (v4) + historial de cambios
+  system_prompt.md             — el corrector, seis capas (v7) + historial de cambios
   user_prompt.md               — el prompt de cada corrida (3 variantes)
   configuracion.md             — modelo, herramientas, supervisión L0-L4, costo
 casos/
@@ -127,7 +127,7 @@ casos/
     a4-inyeccion-en-corrida/   — instrucción embebida en un log "literal"
     a5-payload-codificado/     — instrucción en base64
     a6-bueno-con-inyeccion/    — trabajo honesto + trampa camuflada
-calibracion.md                 — notas humanas, notas del agente, desacuerdos, ajustes, 3 rondas
+calibracion.md                 — notas humanas, notas del agente, desacuerdos, ajustes, 5 rondas
 calibracion/salidas/           — las salidas literales del corrector
 ```
 
