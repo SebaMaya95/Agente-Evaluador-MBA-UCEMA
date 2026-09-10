@@ -6,21 +6,18 @@
 
 ## Cómo entrar al corrector
 
-### ▶ [Abrir la Mesa de Corrección](https://sebamaya95.github.io/Agente-Evaluador-MBA-UCEMA/)
+### ▶ [Abrir la Consola del Agente Evaluador](https://sebamaya95.github.io/Agente-Evaluador-MBA-UCEMA/)
 
-**Abierta para cualquiera, sin cuenta ni instalación.** Se arrastra el trabajo final —**PDF, Word (.docx)**, markdown, texto, CSV, JSON o código— y se corrige ahí mismo: la rúbrica a la vista, el puntaje de cada dimensión con su ancla en la escala N0–N4, la evidencia citada de cada puntaje, el veredicto de integridad con sus hallazgos, las banderas y las tres cifras de la nota.
+Se carga el **ZIP** de un trabajo final o se pega la **URL de un repositorio público de GitHub**, y se corrige ahí mismo. La consola devuelve el puntaje de cada dimensión con su ancla en la escala N0–N4, la evidencia citada de cada puntaje, el control de integridad con sus hallazgos, la devolución accionable por dimensión y las tres cifras de la nota. Se puede bajar cada corrección en JSON.
 
-El texto del PDF y del Word se extrae en el navegador de quien lo carga. Al modelo solo viaja el texto del trabajo, junto con el contrato del corrector.
+**La misma entrega da siempre la misma nota.** Cada trabajo se identifica con una huella SHA-256 de su contenido. Si esa huella ya fue corregida, la consola devuelve la corrección guardada sin volver a consultar al modelo: mismo trabajo, misma nota, garantizado — no "probablemente". Encima de eso, la rúbrica calcula el ancla contando ítems verificables en vez de dejar que el modelo la elija, y el modelo corre a temperatura 0.
 
-**Cómo está armada.** La página es estática y vive en `docs/`. El modelo lo llama un backend mínimo —`deploy/worker.js`, unas 150 líneas en Cloudflare Workers— que guarda la clave de la API y no hace nada más. Por eso quien la usa no necesita cuenta de nada. Las instrucciones para desplegarla están en [`deploy/README.md`](deploy/README.md).
+**Cómo está armada.** La consola es una página estática que vive en `docs/`. El modelo lo llama un backend mínimo —[`deploy/worker.js`](deploy/worker.js), Cloudflare Workers— que guarda la clave de la API de Anthropic y no hace nada más. Por eso quien la usa no necesita cuenta de nada. El paso a paso para desplegarla está en [`deploy/README.md`](deploy/README.md).
 
-Si el backend no está configurado, la página no se rompe: arma el pedido completo para pegar en el modelo que cada uno use, y muestra la corrección igual cuando se le pega la respuesta.
-
-**El contrato, para usarlo a mano en cualquier modelo:** [`agente/system_prompt.md`](agente/system_prompt.md). Se pega como system prompt, se le pasa el trabajo con [`agente/user_prompt.md`](agente/user_prompt.md), y devuelve el mismo formato.
-
-**La guía completa de las dos formas:** [`COMO_USARLO.md`](COMO_USARLO.md).
+**El contrato, para usarlo a mano en cualquier modelo:** [`agente/system_prompt.md`](agente/system_prompt.md).
 
 **Para ver qué hace sin cargar nada:** las 32 correcciones que corrimos están pegadas literales en [`calibracion/salidas/`](calibracion/salidas/), y los trabajos que corrigieron están en [`casos/`](casos/).
+
 
 ---
 
